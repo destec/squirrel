@@ -4,21 +4,14 @@ const Squirrel = require('../lib/squirrel');
 
 const app = new Squirrel();
 
-app.middlewares = [];
-function* responseTime (next) {
-  const start = new Date();
+app.use(function* (next) {
+  this.body = '123';
   yield next;
-  const ms = new Date - start;
-  this.set('X-Response-Time', ms);
-}
-app.middlewares.push(responseTime);
-
-app.router.get('/test', function* (next) {
-  yield next;
-  this.body = 'test router';
 });
 
-app.loadMiddlewares(app.middlewares);
-app.loadRoutes(app.router);
+app.routes.get('/1', function* (next) {
+  yield next;
+  this.body = 'test';
+});
 
 app.start(3000);
